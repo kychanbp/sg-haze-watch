@@ -158,12 +158,12 @@
   }
   function drawHours(i) {
     const svg = $("hourchart"); svg.innerHTML = "";
-    const D = hourData(i), W = 640, H = 260, L0 = 44, R0 = 50, T0 = 14, B0 = 34;
+    const D = hourData(i), W = 640, H = 260, L0 = 44, R0 = 58, T0 = 14, B0 = 34;
     const ymax = Math.max(60, ...D.map((x) => x.pm)) * 1.1, hmax = 1200;
     const x = (h) => L0 + (h + 0.5) * (W - L0 - R0) / 24, y = (v) => H - B0 - v / ymax * (H - T0 - B0), y2 = (v) => H - B0 - v / hmax * (H - T0 - B0);
     const g = svgEl("g", { class: "axis" }, svg);
     for (let v = 0; v <= ymax; v += ymax > 160 ? 50 : 20) { svgEl("line", { x1: L0, x2: W - R0, y1: y(v), y2: y(v), stroke: "currentColor", "stroke-opacity": .12 }, g); svgEl("text", { x: L0 - 6, y: y(v) + 4, "text-anchor": "end" }, g).textContent = v; }
-    for (let v = 0; v <= hmax; v += 300) svgEl("text", { x: W - R0 + 6, y: y2(v) + 4 }, g).textContent = v + " m";
+    for (let v = 0; v <= hmax; v += 300) svgEl("text", { x: W - 1, y: y2(v) + 4, "text-anchor": "end" }, g).textContent = v + " m";
     for (let h = 0; h < 24; h += 3) svgEl("text", { x: x(h), y: H - B0 + 16, "text-anchor": "middle" }, g).textContent = HW.hourLabel(h);
     svgEl("text", { x: L0 - 34, y: T0 + 2 }, g).textContent = "µg/m³";
     const bw = (W - L0 - R0) / 24 * 0.72;
