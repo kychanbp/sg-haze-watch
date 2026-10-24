@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>How It Works · SG Haze Watch</title>
 <meta name="description" content="How a simple physics model forecasts the haze in Singapore: PM2.5, the box of air, the lid (temperature inversion), wind, rain, fires and peat. With a box lab and a quiz.">
 <meta property="og:title" content="How do we forecast the haze? A physics lesson">
 <meta property="og:description" content="One box of air, a lid that moves with the sun, smoke from far away. Try the box lab and the quiz.">
 <meta property="og:image" content="https://kychanbp.github.io/sg-haze-watch/data/og.png">
-<meta name="theme-color" content="#0f6fa8">
+<meta name="theme-color" content="#eef5fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1620" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Haze Watch">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,10 +26,10 @@
 <div class="wrap">
   <header class="top">
     <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
-    <nav class="nav">
+    <nav class="nav" aria-label="Main">
       <a href="./">Forecast</a>
       <a href="map.html">Pollution map</a>
-      <a href="learn.html" class="on">How it works</a>
+      <a href="learn.html" class="on" aria-current="page">How it works</a>
       <a href="about.html">About</a>
     </nav>
     <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
@@ -36,10 +42,14 @@
         <div class="kicker">A lesson for students (age 13 and up)</div>
         <h1>How do we forecast the haze?</h1>
         <p>Hi, I am <b>Puff</b>, a small cloud of air. Our forecast does not use magic, and it does not use artificial intelligence. It uses <b>physics</b>: one box of air, a lid that goes up and down with the sun, and smoke that travels with the wind. Follow me through 10 short steps. Then try the <a href="#lab">box lab</a> and the <a href="#quiz">quiz</a>.</p>
-        <div class="chips" id="toc"></div>
       </div>
     </div>
   </section>
+
+  <nav class="chapbar" id="chapbar" aria-label="Chapters of the lesson">
+    <div class="chips" id="toc"></div>
+    <i class="chapprog" id="chapprog"></i>
+  </nav>
 
   <main class="lesson">
     <section class="card" id="pm25">
@@ -267,6 +277,12 @@
     <p><a href="about.html">About the data and the model</a> · <a href="https://github.com/kychanbp/sg-haze-watch">Code on GitHub</a></p>
   </footer>
 </div>
+<nav class="tabbar" aria-label="Main">
+  <a href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.6a3.6 3.6 0 0 0 .3-7.2 5.2 5.2 0 0 0-10-1.2 4.2 4.2 0 0 0 .1 8.4z"/><path d="M8.5 21.5h7"/></svg><span>Forecast</span></a>
+  <a href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Map</span></a>
+  <a href="learn.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-1.8-1.6-4.6-2.3-8-2v13c3.4-.3 6.2.4 8 2 1.8-1.6 4.6-2.3 8-2V5c-3.4-.3-6.2.4-8 2z"/><path d="M12 7v13"/></svg><span>Learn</span></a>
+  <a href="about.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.1"/></svg><span>About</span></a>
+</nav>
 <script src="assets/common.js"></script>
 <script src="assets/box.js"></script>
 <script src="assets/learn.js"></script>

@@ -3,8 +3,46 @@
   const $ = (id) => document.getElementById(id);
   const fmt = (x, d = 0) => (x == null || Number.isNaN(x) ? "–" : Number(x).toFixed(d));
   $("puff").innerHTML = HW.mascot("good", { label: "Puff, a small cloud of air" });
-  const SECTIONS = [["pm25", "PM2.5"], ["sources", "Sources"], ["box", "The box"], ["lid", "The lid"], ["wind", "Wind"], ["equation", "Equation"], ["lab", "Box lab"], ["smoke", "Smoke"], ["forecast", "Forecast"], ["test", "Fair test"], ["quiz", "Quiz"]];
-  $("toc").innerHTML = SECTIONS.map(([id, n]) => `<a class="chip" href="#${id}" style="text-decoration:none">${n}</a>`).join("");
+  const SECTIONS = [["pm25", "PM2.5"], ["sources", "Sources"], ["box", "The box"], ["lid", "The lid"], ["wind", "Wind"], ["equation", "Equation"], ["lab", "Box lab"], ["smoke", "Smoke"], ["forecast", "Forecast"], ["test", "Fair test"], ["quiz", "Quiz"], ["glossary", "Words"]];
+
+  // ---------- chapter bar: it stays at the top, and shows which chapter you read and how far you are ----------
+  (function chapters() {
+    const row = $("toc"), bar = $("chapbar"), prog = $("chapprog"), lesson = document.querySelector("main.lesson");
+    row.innerHTML = SECTIONS.map(([id, n], k) => `<a class="chip" href="#${id}"><i>${k + 1}</i>${n}</a>`).join("");
+    const chips = [...row.children], secs = SECTIONS.map(([id]) => $(id));
+    const still = matchMedia("(prefers-reduced-motion: reduce)");
+    let cur = -2, queued = false;
+    row.addEventListener("click", (e) => {
+      const a = e.target.closest("a");
+      if (!a) return;
+      e.preventDefault();
+      const id = a.getAttribute("href").slice(1);
+      $(id).scrollIntoView({ behavior: still.matches ? "auto" : "smooth", block: "start" });
+      history.replaceState(null, "", "#" + id);
+    });
+    function spy() {
+      queued = false;
+      const tab = document.querySelector(".tabbar"), b = bar.getBoundingClientRect();
+      const top = b.bottom, view = innerHeight - (tab ? tab.offsetHeight : 0);
+      bar.classList.toggle("stuck", b.top <= parseFloat(getComputedStyle(bar).top) + 1);
+      // the chapter you read: the last one that starts above a line at 30% of the free screen
+      let i = -1;
+      secs.forEach((s, k) => { if (s.getBoundingClientRect().top <= top + (view - top) * 0.3) i = k; });
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) i = secs.length - 1;
+      if (i !== cur) {
+        cur = i;
+        chips.forEach((c, k) => { c.classList.toggle("on", k === i); if (k === i) c.setAttribute("aria-current", "true"); else c.removeAttribute("aria-current"); });
+        const rb = row.getBoundingClientRect(), cb = chips[Math.max(i, 0)].getBoundingClientRect();
+        row.scrollBy({ left: i < 0 ? -row.scrollLeft : cb.left + cb.width / 2 - (rb.left + rb.width / 2), behavior: still.matches ? "auto" : "smooth" });
+      }
+      const m = lesson.getBoundingClientRect();
+      prog.style.transform = `scaleX(${Math.min(1, Math.max(0, (top - m.top) / Math.max(1, m.height - (view - top)))).toFixed(4)})`;
+    }
+    const later = () => { if (!queued) { queued = true; requestAnimationFrame(spy); } };
+    addEventListener("scroll", later, { passive: true });
+    addEventListener("resize", later);
+    spy();
+  })();
 
   // data: constants of the live model, the month-hour lid heights, the 2026 test (optional)
   const [F, B, S] = await Promise.all([HW.getJSON("data/forecast.json").catch(() => null), HW.getJSON("data/static/blh_clim.json"), HW.getJSON("data/static/skill.json").catch(() => null)]);

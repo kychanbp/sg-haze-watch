@@ -62,8 +62,11 @@
     add(P.p100, groups.path100, "#14a3a3", "6 6");
   }
   function toggle(k, on) { if (!groups[k]) return; on ? groups[k].addTo(map) : map.removeLayer(groups[k]); }
+  // on phones the layers are small chips: the line under them says what the last one shows
+  const info = (inp) => { const sm = inp.closest("label").querySelector("small"); $("linfo").textContent = sm ? sm.textContent : ""; };
   document.querySelectorAll("#layers input").forEach((inp) => {
     inp.addEventListener("change", () => {
+      info(inp);
       if (inp.type === "radio") { setEmis(inp.value); document.querySelectorAll("#layers input[type=radio]").forEach((r) => r.closest("label").classList.toggle("on", r.checked)); }
       else { toggle(inp.dataset.layer, inp.checked); inp.closest("label").classList.toggle("on", inp.checked); }
     });
@@ -104,5 +107,7 @@
   $("emis-table").innerHTML = `<tr><th>Source</th><th>Whole map (t/year)</th><th>Near Singapore (t/year)</th></tr>` +
     ["ships", "traffic", "power_industry", "homes_farms", "all"].map((k) => `<tr><td>${NAMES[k]}</td><td>${t(E.layers[k].total_t_per_year_region)}</td><td>${t(E.layers[k].singapore_t_per_year)}</td></tr>`).join("");
 
+  info(document.querySelector('#layers input[data-layer="fires"]'));
+  HW.autoRefresh();
   document.addEventListener("themechange", () => location.reload());
 })();

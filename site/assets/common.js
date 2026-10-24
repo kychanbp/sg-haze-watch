@@ -1,4 +1,4 @@
-/* SG Haze Watch: shared helpers (bands, mascot, dates, theme, tooltip). No libraries. */
+/* SG Haze Watch: shared helpers (bands, mascot, dates, theme, tooltip, app install). No libraries. */
 const HW = (() => {
   const BANDS = [
     { key: "good", name: "Good", lo: 0, hi: 50, emoji: "😀" },
@@ -71,7 +71,11 @@ const HW = (() => {
     if (t) document.documentElement.dataset.theme = t;
     const b = document.querySelector(".theme-btn");
     if (!b) return;
-    const sync = () => { const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches); b.textContent = dark ? "☀️" : "🌙"; b.title = dark ? "Light mode" : "Dark mode"; };
+    const sync = () => {
+      const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+      b.textContent = dark ? "☀️" : "🌙"; b.title = dark ? "Light mode" : "Dark mode";
+      if (document.documentElement.dataset.theme) document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute("content", dark ? "#0d1620" : "#eef5fa"));
+    };
     b.addEventListener("click", () => {
       const dark = b.textContent === "☀️";
       document.documentElement.dataset.theme = dark ? "light" : "dark";
@@ -115,6 +119,77 @@ const HW = (() => {
     { key: "background", name: "Background", emoji: "🌏", text: "the small amount that is always in the air of the region" },
   ];
 
-  return { BANDS, band, color, psi, mascot, dayName, dateShort, dateLong, hourLabel, sgToday, initTheme, tip, getJSON, PARTS, isDark, basemap };
+  // ---------- the app: top bar, install on the home screen, refresh ----------
+  function topBar() {
+    const h = document.querySelector(".top");
+    if (!h) return;
+    const f = () => h.classList.toggle("scrolled", scrollY > 6);
+    addEventListener("scroll", f, { passive: true }); f();
+  }
+
+  const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let promptEv = null;
+  const onPrompt = [];
+  addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); promptEv = e; onPrompt.forEach((f) => f()); });
+  addEventListener("appinstalled", () => { promptEv = null; document.querySelectorAll(".install-bar").forEach((el) => el.remove()); onPrompt.forEach((f) => f()); });
+  async function install() {
+    if (!promptEv) return false;
+    promptEv.prompt();
+    const r = await promptEv.userChoice.catch(() => null);
+    promptEv = null;
+    return !!(r && r.outcome === "accepted");
+  }
+  const IOS_SHARE = `<svg class="ios-share" viewBox="0 0 24 24" aria-label="Share"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>`;
+
+  // a small card above the tab bar on phones; "Not now" hides it for 14 days
+  function installBar() {
+    const KEY = "hw-install-later";
+    let later = 0; try { later = +localStorage.getItem(KEY) || 0; } catch (e) { }
+    if (Date.now() < later || standalone()) return;
+    const show = () => {
+      if (standalone() || document.querySelector(".install-bar") || !matchMedia("(max-width: 760px)").matches) return;
+      if (!promptEv && !isIOS()) return;
+      const bar = document.createElement("div");
+      bar.className = "install-bar"; bar.setAttribute("role", "dialog"); bar.setAttribute("aria-label", "Get the app");
+      bar.innerHTML = `<img src="assets/icon-96.png" alt="" width="40" height="40"><div><b>Get the Haze Watch app</b><span>` +
+        (promptEv ? "Add it to your home screen. It opens full screen, and it shows the last forecast with no network."
+          : `Tap ${IOS_SHARE} Share in Safari, then <b>Add to Home Screen</b>.`) + `</span></div>` +
+        (promptEv ? `<button class="btn primary" type="button" data-act="add">Add</button>` : "") +
+        `<button class="x" type="button" aria-label="Not now" data-act="x">×</button>`;
+      bar.addEventListener("click", async (e) => {
+        const act = e.target.closest("button") && e.target.closest("button").dataset.act;
+        if (act === "add" && await install()) bar.remove();
+        if (act === "x") { bar.remove(); try { localStorage.setItem(KEY, String(Date.now() + 14 * 864e5)); } catch (err) { } }
+      });
+      document.body.appendChild(bar);
+    };
+    setTimeout(show, 2500); onPrompt.push(() => setTimeout(show, 400));
+  }
+
+  // the "Get the app" card on the about page
+  function installCard(el) {
+    if (!el) return;
+    const render = () => {
+      if (standalone()) { el.innerHTML = `<p>✅ You use Haze Watch as an app on this device now.</p>`; return; }
+      el.innerHTML = `<p>Put Haze Watch on your home screen. It opens full screen like an app, and it shows the last forecast when there is no network. It is free, it needs no app store, and it does not track you.</p>` +
+        (promptEv ? `<p><button class="btn primary" type="button">📲 Install the app</button></p>` : "") +
+        `<ul><li><b>iPhone and iPad:</b> open this site in Safari, tap ${IOS_SHARE} Share, then <b>Add to Home Screen</b>.</li>` +
+        `<li><b>Android:</b> open this site in Chrome, tap the menu ⋮, then <b>Install app</b> or <b>Add to Home screen</b>.</li></ul>`;
+      const b = el.querySelector("button");
+      if (b) b.onclick = async () => { await install(); render(); };
+    };
+    render(); onPrompt.push(render);
+  }
+
+  // an app can stay open for days: get the new forecast when it comes back after some hours
+  function autoRefresh(hours = 3) {
+    const t0 = Date.now();
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - t0 > hours * 3600e3) location.reload(); });
+  }
+
+  return { BANDS, band, color, psi, mascot, dayName, dateShort, dateLong, hourLabel, sgToday, initTheme, tip, getJSON, PARTS, isDark, basemap, installBar, installCard, autoRefresh, topBar };
 })();
-document.addEventListener("DOMContentLoaded", HW.initTheme);
+document.addEventListener("DOMContentLoaded", () => { HW.initTheme(); HW.topBar(); HW.installCard(document.getElementById("install-card")); });
+// offline copy of the site and the last forecast (sw.js)
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => { }));

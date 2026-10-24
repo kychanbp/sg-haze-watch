@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>About · SG Haze Watch</title>
 <meta name="description" content="About SG Haze Watch: the data, the physics model, how good the forecast is, and its limits.">
 <meta property="og:title" content="About SG Haze Watch">
 <meta property="og:image" content="https://kychanbp.github.io/sg-haze-watch/data/og.png">
-<meta name="theme-color" content="#0f6fa8">
+<meta name="theme-color" content="#eef5fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1620" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Haze Watch">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,11 +25,11 @@
 <div class="wrap">
   <header class="top">
     <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
-    <nav class="nav">
+    <nav class="nav" aria-label="Main">
       <a href="./">Forecast</a>
       <a href="map.html">Pollution map</a>
       <a href="learn.html">How it works</a>
-      <a href="about.html" class="on">About</a>
+      <a href="about.html" class="on" aria-current="page">About</a>
     </nav>
     <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
   </header>
@@ -33,6 +39,11 @@
       <h1>About SG Haze Watch</h1>
       <p>SG Haze Watch is a free, open science project. It forecasts the PM2.5 and the PSI in Singapore for the next 7 days, so that friends, families and schools can plan ahead. It also shows how the forecast works, step by step.</p>
       <div class="callout"><b>This is not an official forecast.</b> For the official readings, the official haze outlook and health advice, use <a href="https://www.haze.gov.sg/">haze.gov.sg</a> from the National Environment Agency (NEA). If you feel unwell in the haze, see a doctor.</div>
+    </section>
+
+    <section class="card" id="app">
+      <h2>📲 Get the app</h2>
+      <div id="install-card"></div>
     </section>
 
     <section class="card">
@@ -109,13 +120,19 @@
 
     <section class="card">
       <h2>🔒 Privacy</h2>
-      <p>This site has no cookies, no tracking and no ads. Your browser only remembers your light or dark mode choice. The "Right now" box asks data.gov.sg for the latest NEA readings directly from your browser.</p>
+      <p>This site has no cookies, no tracking and no ads. Your browser remembers only two things: your light or dark mode choice, and if you close the "Get the app" card, the date when you closed it. To work with no network, the app keeps a copy of these pages and of the last forecast on your device. The "Right now" box asks data.gov.sg for the latest NEA readings directly from your browser.</p>
       <p>The code is open: <a href="https://github.com/kychanbp/sg-haze-watch">github.com/kychanbp/sg-haze-watch</a>. You can report a problem there.</p>
     </section>
   </main>
 
   <footer class="foot"><p><b>Not an official forecast.</b> Official information: <a href="https://www.haze.gov.sg/">haze.gov.sg</a> (NEA).</p></footer>
 </div>
+<nav class="tabbar" aria-label="Main">
+  <a href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.6a3.6 3.6 0 0 0 .3-7.2 5.2 5.2 0 0 0-10-1.2 4.2 4.2 0 0 0 .1 8.4z"/><path d="M8.5 21.5h7"/></svg><span>Forecast</span></a>
+  <a href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Map</span></a>
+  <a href="learn.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-1.8-1.6-4.6-2.3-8-2v13c3.4-.3 6.2.4 8 2 1.8-1.6 4.6-2.3 8-2V5c-3.4-.3-6.2.4-8 2z"/><path d="M12 7v13"/></svg><span>Learn</span></a>
+  <a href="about.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.1"/></svg><span>About</span></a>
+</nav>
 <script src="assets/common.js"></script>
 <script src="assets/about.js"></script>
 </body>

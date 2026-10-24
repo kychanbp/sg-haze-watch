@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SG Haze Watch</title>
 <meta name="description" content="Will the haze be bad tomorrow? A free physics forecast of PM2.5 and PSI in Singapore, with a 7-day outlook, a pollution map and a lesson on how it works.">
 <meta property="og:title" content="SG Haze Watch: tomorrow's haze in Singapore">
@@ -11,7 +11,13 @@
 <meta property="og:url" content="https://kychanbp.github.io/sg-haze-watch/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0f6fa8">
+<meta name="theme-color" content="#eef5fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1620" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Haze Watch">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,42 +30,46 @@
 <div class="wrap">
   <header class="top">
     <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
-    <nav class="nav">
-      <a href="./" class="on">Forecast</a>
+    <nav class="nav" aria-label="Main">
+      <a href="./" class="on" aria-current="page">Forecast</a>
       <a href="map.html">Pollution map</a>
       <a href="learn.html">How it works</a>
       <a href="about.html">About</a>
     </nav>
+    <button class="icon-btn" id="share-top" type="button" aria-label="Share the forecast" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg></button>
     <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
   </header>
 
   <main>
     <section class="card" id="hero" aria-live="polite">
-      <div class="hero">
+      <div class="fhero">
         <div class="mascot" id="hero-mascot"></div>
-        <div>
+        <div class="hero-head">
           <div class="kicker" id="hero-kicker">Forecast</div>
           <h1 id="hero-title">Loading the forecast…</h1>
-          <div class="facts" id="hero-facts"></div>
+          <div class="hero-sub" id="hero-sub"></div>
+        </div>
+        <div class="hero-body">
           <div class="meter-row" id="hero-chance"></div>
           <div id="hero-banner"></div>
+          <div class="stats" id="hero-facts"></div>
           <div class="btns" id="share"></div>
           <div class="stale" id="stale"></div>
         </div>
       </div>
     </section>
 
-    <section class="card" id="now">
-      <h2>📡 Right now <small id="now-time" class="muted"></small></h2>
-      <p class="small">Live readings from NEA. 24-hour PSI by region, and the 1-hour PM2.5 (what you breathe this hour).</p>
-      <div class="now" id="now-psi"></div>
-      <div class="now" id="now-pm" style="margin-top:8px"></div>
-    </section>
-
     <section class="card" id="outlook">
       <h2>📅 Next 7 days</h2>
-      <p class="small">Highest 24-hour PSI of each day (mean of the five NEA regions). The bar shows the likely range (8 in 10 chance). Stars show how sure the forecast is: it is less sure for days far ahead, because we cannot see future fires.</p>
+      <p class="small">Highest 24-hour PSI of each day (mean of the five NEA regions). Bar: the likely range (8 in 10 chance). Stars: how sure the forecast is. Days far ahead are less sure, because nobody can see future fires. Tap a day to see it.</p>
       <div class="days" id="days"></div>
+    </section>
+
+    <section class="card" id="now">
+      <h2>📡 Right now <small id="now-time" class="muted"></small></h2>
+      <p class="small">Live readings from NEA: the 24-hour PSI and the 1-hour PM2.5 (what you breathe this hour) in each region.</p>
+      <div class="now" id="now-psi"></div>
+      <div class="now" id="now-pm"></div>
     </section>
 
     <div class="grid2">
@@ -109,6 +119,12 @@
     <p id="updated"></p>
   </footer>
 </div>
+<nav class="tabbar" aria-label="Main">
+  <a href="./" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.6a3.6 3.6 0 0 0 .3-7.2 5.2 5.2 0 0 0-10-1.2 4.2 4.2 0 0 0 .1 8.4z"/><path d="M8.5 21.5h7"/></svg><span>Forecast</span></a>
+  <a href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Map</span></a>
+  <a href="learn.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-1.8-1.6-4.6-2.3-8-2v13c3.4-.3 6.2.4 8 2 1.8-1.6 4.6-2.3 8-2V5c-3.4-.3-6.2.4-8 2z"/><path d="M12 7v13"/></svg><span>Learn</span></a>
+  <a href="about.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.1"/></svg><span>About</span></a>
+</nav>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="assets/common.js"></script>
 <script src="assets/app.js"></script>

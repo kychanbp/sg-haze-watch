@@ -1,10 +1,23 @@
 {
+  "id": "./",
   "name": "SG Haze Watch",
   "short_name": "Haze Watch",
-  "description": "Physics forecast of PM2.5 and PSI in Singapore, with a 7-day outlook.",
+  "description": "Physics forecast of PM2.5 and PSI in Singapore, with a 7-day outlook, a pollution map and a lesson on how it works.",
+  "lang": "en-SG",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f8fb",
-  "theme_color": "#0f6fa8",
-  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+  "background_color": "#eef5fa",
+  "theme_color": "#eef5fa",
+  "categories": ["weather", "health", "education"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Pollution map", "short_name": "Map", "url": "map.html", "icons": [{ "src": "assets/icon-96.png", "sizes": "96x96", "type": "image/png" }] },
+    { "name": "How it works", "short_name": "Learn", "url": "learn.html", "icons": [{ "src": "assets/icon-96.png", "sizes": "96x96", "type": "image/png" }] }
+  ]
 }

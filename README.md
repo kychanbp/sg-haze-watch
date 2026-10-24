@@ -5,6 +5,10 @@ PSI goes above 100, a map of the pollution sources, and a lesson on how the fore
 
 **Site:** https://kychanbp.github.io/sg-haze-watch/
 
+On a phone, the site works like an app: tabs at the bottom, and you can add it to the home screen
+(iPhone: Safari → Share → *Add to Home Screen*; Android: Chrome → ⋮ → *Install app*). The app opens full screen
+and shows the last forecast when there is no network.
+
 Not an official forecast. For official readings and health advice, use [haze.gov.sg](https://www.haze.gov.sg/) (NEA).
 
 ## How the forecast works
@@ -40,6 +44,7 @@ pipeline/            the daily job (Python)
   prep_static.py     one-time static inputs (land, peat, ships, emissions, mixing height)
   static/            model constants, error model, static grids
 site/                the website (plain HTML, CSS and JavaScript; Leaflet for maps)
+  sw.js manifest.webmanifest                          the phone app: install, and the offline copy of the last forecast
 .github/workflows/forecast.yml                       nightly job and publishing
 ```
 
