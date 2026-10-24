@@ -48,7 +48,8 @@ site/                the website (plain HTML, CSS and JavaScript; Leaflet for ma
 `.github/workflows/forecast.yml` runs at 00:25 Singapore time (and again at 02:40 if the first run failed). It reads
 the model state from the `gh-pages` branch (`state/`: NEA readings archive, fire grids, peat dryness, past
 forecasts), runs the forecast, and replaces the `gh-pages` branch with one new commit: the site, the new data and the
-new state. A push to `main` that changes `site/` publishes the new page code with the last forecast.
+new state. A push to `main` that changes the site or the pipeline publishes the new page code with the last
+forecast, and then tests a full forecast run on the GitHub runner (its output is thrown away).
 
 Set-up (once):
 

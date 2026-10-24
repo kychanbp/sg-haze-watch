@@ -13,9 +13,9 @@ on:
         description: "Run a new forecast (off: only publish the page code)"
         type: boolean
         default: true
-  push:
+  push:                       # new page code: publish it; new pipeline code: also test a full forecast run
     branches: [main]
-    paths: ["site/**"]
+    paths: ["site/**", "pipeline/**", "requirements.txt", ".github/workflows/forecast.yml"]
 
 permissions:
   contents: write
@@ -97,3 +97,14 @@ jobs:
           git add -A
           git commit -q -m "Forecast and site, $(date -u +'%Y-%m-%d %H:%M') UTC"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+
+      - name: Test a full forecast run (push only; the output is thrown away)
+        if: github.event_name == 'push'
+        env:
+          HAZE_STATE: _test/state
+          HAZE_WORK: _work
+          HAZE_SITE_DATA: _test/data
+        run: |
+          mkdir -p _test/data
+          cp -r _old/state _test/state
+          python -m pipeline.run
