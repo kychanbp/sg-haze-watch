@@ -50,11 +50,13 @@ site/                the website (plain HTML, CSS and JavaScript; Leaflet for ma
 
 ## The nightly job
 
-`.github/workflows/forecast.yml` runs at 00:25 Singapore time (and again at 02:40 if the first run failed). It reads
-the model state from the `gh-pages` branch (`state/`: NEA readings archive, fire grids, peat dryness, past
-forecasts), runs the forecast, and replaces the `gh-pages` branch with one new commit: the site, the new data and the
-new state. A push to `main` that changes the site or the pipeline publishes the new page code with the last
-forecast, and then tests a full forecast run on the GitHub runner (its output is thrown away).
+`.github/workflows/forecast.yml` runs at 00:25 Singapore time. It reads the model state from the `gh-pages` branch
+(`state/`: NEA readings archive, fire grids, peat dryness, past forecasts), runs the forecast, and replaces the
+`gh-pages` branch with one new commit: the site, the new data and the new state. GitHub sometimes starts a scheduled
+run very late or not at all, so the job tries again at 02:40, 05:10 and 07:10; a try does nothing when the forecast of
+the night is already there. A push to `main` that changes the site or the pipeline publishes the new page code. After
+01:00 Singapore time it also makes the forecast of the night if it is not there yet; else it tests a full forecast run
+on the GitHub runner (its output is thrown away).
 
 Set-up (once):
 

@@ -6,14 +6,17 @@ name: Forecast and publish
 on:
   schedule:
     - cron: "25 16 * * *"     # 00:25 Singapore time: NEA readings to 23:00 are in
-    - cron: "40 18 * * *"     # 02:40 Singapore time: a second try (skips when the first run worked)
+    - cron: "40 18 * * *"     # 02:40, 05:10 and 07:10 Singapore time: more tries. GitHub sometimes starts a
+    - cron: "10 21 * * *"     # scheduled run very late or not at all. A try does nothing when the forecast of
+    - cron: "10 23 * * *"     # the night is already there.
   workflow_dispatch:
     inputs:
       forecast:
         description: "Run a new forecast (off: only publish the page code)"
         type: boolean
         default: true
-  push:                       # new page code: publish it; new pipeline code: also test a full forecast run
+  push:                       # publish the new code. After 01:00 Singapore time, also make the forecast of the
+                              # night if it is not there yet; else test a full forecast run (output thrown away).
     branches: [main]
     paths: ["site/**", "pipeline/**", "requirements.txt", ".github/workflows/forecast.yml"]
 
@@ -57,7 +60,7 @@ jobs:
 
       - name: Forecast
         id: forecast
-        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.forecast)
+        if: github.event_name != 'workflow_dispatch' || inputs.forecast
         shell: bash
         env:
           HAZE_STATE: _old/state
@@ -65,11 +68,18 @@ jobs:
           HAZE_SITE_DATA: _old/data
           DATA_GOV_SG_API_KEY: ${{ secrets.DATA_GOV_SG_API_KEY }}
         run: |
-          if [ "${{ github.event.schedule }}" = "40 18 * * *" ]; then
-            python -m pipeline.run --skip-if-done | tee run.log
-            if grep -q "is already there" run.log; then echo "skip=true" >> "$GITHUB_OUTPUT"; fi
-          else
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event.schedule }}" = "25 16 * * *" ]; then
             python -m pipeline.run
+            echo "ran=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "push" ] && [ "$(TZ=Asia/Singapore date +%H)" = "00" ]; then
+            echo "Push before 01:00 Singapore time: the nightly run makes the forecast."
+          else
+            python -m pipeline.run --skip-if-done | tee run.log
+            if grep -q "is already there" run.log; then
+              if [ "${{ github.event_name }}" = "schedule" ]; then echo "skip=true" >> "$GITHUB_OUTPUT"; fi
+            else
+              echo "ran=true" >> "$GITHUB_OUTPUT"
+            fi
           fi
 
       - name: Prune old downloads
@@ -99,7 +109,7 @@ jobs:
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
 
       - name: Test a full forecast run (push only; the output is thrown away)
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && steps.forecast.outputs.ran != 'true'
         env:
           HAZE_STATE: _test/state
           HAZE_WORK: _work
