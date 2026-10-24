@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SG Haze Watch</title>
+<meta name="description" content="Will the haze be bad tomorrow? A free physics forecast of PM2.5 and PSI in Singapore, with a 7-day outlook, a pollution map and a lesson on how it works.">
+<meta property="og:title" content="SG Haze Watch: tomorrow's haze in Singapore">
+<meta property="og:description" content="Physics forecast of PM2.5 and PSI for Singapore, updated every night. 7-day outlook, map of fires and emissions, and how the model works.">
+<meta property="og:image" content="https://kychanbp.github.io/sg-haze-watch/data/og.png">
+<meta property="og:url" content="https://kychanbp.github.io/sg-haze-watch/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f6fa8">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
+    <nav class="nav">
+      <a href="./" class="on">Forecast</a>
+      <a href="map.html">Pollution map</a>
+      <a href="learn.html">How it works</a>
+      <a href="about.html">About</a>
+    </nav>
+    <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
+  </header>
+
+  <main>
+    <section class="card" id="hero" aria-live="polite">
+      <div class="hero">
+        <div class="mascot" id="hero-mascot"></div>
+        <div>
+          <div class="kicker" id="hero-kicker">Forecast</div>
+          <h1 id="hero-title">Loading the forecast…</h1>
+          <div class="facts" id="hero-facts"></div>
+          <div class="meter-row" id="hero-chance"></div>
+          <div id="hero-banner"></div>
+          <div class="btns" id="share"></div>
+          <div class="stale" id="stale"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="now">
+      <h2>📡 Right now <small id="now-time" class="muted"></small></h2>
+      <p class="small">Live readings from NEA. 24-hour PSI by region, and the 1-hour PM2.5 (what you breathe this hour).</p>
+      <div class="now" id="now-psi"></div>
+      <div class="now" id="now-pm" style="margin-top:8px"></div>
+    </section>
+
+    <section class="card" id="outlook">
+      <h2>📅 Next 7 days</h2>
+      <p class="small">Highest 24-hour PSI of each day (mean of the five NEA regions). The bar shows the likely range (8 in 10 chance). Stars show how sure the forecast is: it is less sure for days far ahead, because we cannot see future fires.</p>
+      <div class="days" id="days"></div>
+    </section>
+
+    <div class="grid2">
+      <section class="card" id="whatsin">
+        <h2>🧪 What is in the air?</h2>
+        <p class="small" id="whatsin-day"></p>
+        <div class="parts" id="parts"></div>
+        <div class="legend" id="parts-legend"></div>
+        <p id="why" style="margin-top:12px"></p>
+      </section>
+      <section class="card" id="wherefrom">
+        <h2>💨 Where does the air come from?</h2>
+        <p class="small" id="path-text"></p>
+        <div class="mapbox" id="minimap" style="height:300px"></div>
+        <p class="small" style="margin-top:8px">Line: the path of the air (about 800 m up, where smoke travels) in the 4 days before it reaches Singapore at 2 pm. Dots: fires seen by satellite on <span id="fire-day"></span>. <a href="map.html">Open the big map →</a></p>
+      </section>
+    </div>
+
+    <section class="card" id="hourly">
+      <h2>⏰ Hour by hour, and the "lid" on our air</h2>
+      <p class="small">Bars: forecast PM2.5 each hour. Line: the height of the lid (the mixing height). At night the lid comes down to about 200 m and squeezes the air into a thin box, so PM2.5 goes up. In the afternoon the sun heats the ground, the lid rises to about 800 m and the air has more room. Touch an hour to see the box.</p>
+      <div class="grid2" style="align-items:center">
+        <svg class="chart" id="hourchart" viewBox="0 0 640 260" role="img" aria-label="Hourly PM2.5 forecast and mixing height"></svg>
+        <svg class="chart" id="boxview" viewBox="0 0 420 260" role="img" aria-label="The box of air over Singapore"></svg>
+      </div>
+      <p class="small" id="besttime"></p>
+    </section>
+
+    <section class="card" id="fires">
+      <h2>🔥 Fires in the region</h2>
+      <p class="small">Total fire power seen by the VIIRS satellite each day (GW). More fire power means more smoke. Wind decides if the smoke comes to Singapore.</p>
+      <svg class="chart" id="firechart" viewBox="0 0 640 220" role="img" aria-label="Daily fire power in Sumatra, Kalimantan and Peninsular Malaysia"></svg>
+      <div class="legend" id="fire-legend"></div>
+    </section>
+
+    <section class="card" id="track">
+      <h2>🎯 How good is this forecast?</h2>
+      <p class="small" id="track-text">Dots: measured daily PM2.5 (mean of the 5 NEA regions). Bars: what the forecast said the night before (likely range).</p>
+      <svg class="chart" id="trackchart" viewBox="0 0 640 240" role="img" aria-label="Forecasts compared with measurements"></svg>
+      <div id="track-score"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><b>Not an official forecast.</b> This is a free, open science project. For official readings and health advice, see <a href="https://www.haze.gov.sg/">haze.gov.sg</a> (NEA).</p>
+    <p>Data: NEA readings via <a href="https://data.gov.sg">data.gov.sg</a> · fires: NASA FIRMS / GIBS (VIIRS) · weather: <a href="https://www.ecmwf.int/en/forecasts/datasets/open-data">ECMWF open data</a> (CC BY 4.0) · rain: CHIRPS (UCSB) · emissions: EDGAR (EC JRC) · climate data: ERA5 (Copernicus). <a href="about.html">More about the data and the model</a> · <a href="https://github.com/kychanbp/sg-haze-watch">Code on GitHub</a></p>
+    <p id="updated"></p>
+  </footer>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

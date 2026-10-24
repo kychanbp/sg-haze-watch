@@ -1,0 +1,17 @@
+{
+ "note": "Forecast error model. log(forecast) = log(model) + b + memory[k] * (e_D - b_init), where e_D = log(measured / model) on the base day, and b = the mean model error of the last bias_days days (free run for k >= 2, init run for k = 1; 0 until min_days values exist). memory: least-squares slopes, v6b daily runs 2014-2025 with this bias term (it was neutral in the 2020-2025 test and cut the 2026 errors by 10-20%). Spread: sd of the log error by lead (rows) and forecast level (columns, ug/m3), from the same runs (perfect weather and fires), plus extra_sd by lead for the real inputs (forecast weather, guessed future fires, month-hour mixing height), from the 2026 hindcast: sd = sqrt(sd_hist^2 + extra_sd^2).",
+ "bias_days": 28,
+ "min_days": 7,
+ "memory": [0.458, 0.369, 0.277, 0.206, 0.204, 0.175, 0.162],
+ "sd_levels": [10, 27.5, 47.5, 80],
+ "sd_hist": [[0.205, 0.231, 0.321, 0.349],
+             [0.251, 0.276, 0.400, 0.425],
+             [0.264, 0.290, 0.372, 0.441],
+             [0.264, 0.290, 0.372, 0.441],
+             [0.264, 0.290, 0.372, 0.441],
+             [0.264, 0.290, 0.372, 0.441],
+             [0.264, 0.290, 0.372, 0.441]],
+ "extra_sd": [0.0, 0.20, 0.20, 0.22, 0.28, 0.32, 0.36],
+ "p_watch": 0.15,
+ "p_watch_note": "chance of PSI > 100 that starts a haze watch: the highest round value that caught 90% of the PSI > 100 days at lead 1 in the 2026 hindcast (8 Aug to 23 Oct: 25 of 27 caught; 5 false flags on 49 clear days, all with PSI 86 to 96). A warning starts at 0.5 (22 of 27 caught, no false flags)."
+}

@@ -1,0 +1,10 @@
+{
+  "name": "SG Haze Watch",
+  "short_name": "Haze Watch",
+  "description": "Physics forecast of PM2.5 and PSI in Singapore, with a 7-day outlook.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f8fb",
+  "theme_color": "#0f6fa8",
+  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

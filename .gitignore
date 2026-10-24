@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+_work/
+_state/
+_site/
+_old/
+.DS_Store
+# made by the nightly job (published on the gh-pages branch)
+site/data/forecast.json
+site/data/map.json
+site/data/history.json
+site/data/og.png

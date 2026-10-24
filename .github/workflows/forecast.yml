@@ -1,0 +1,99 @@
+# Nightly haze forecast and the website.
+# The site and the model state (NEA readings archive, fire grids, peat dryness, past forecasts) live on the
+# gh-pages branch, which is replaced by one new commit each run. GitHub Pages serves that branch.
+name: Forecast and publish
+
+on:
+  schedule:
+    - cron: "25 16 * * *"     # 00:25 Singapore time: NEA readings to 23:00 are in
+    - cron: "40 18 * * *"     # 02:40 Singapore time: a second try (skips when the first run worked)
+  workflow_dispatch:
+    inputs:
+      forecast:
+        description: "Run a new forecast (off: only publish the page code)"
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+    paths: ["site/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Get the published site and the model state
+        run: |
+          mkdir -p _old/data _old/state
+          if git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
+            git fetch --depth=1 origin +refs/heads/gh-pages:refs/remotes/origin/gh-pages
+            git archive origin/gh-pages | tar -x -C _old
+          fi
+          ls -la _old/state
+
+      - name: Cache downloads
+        uses: actions/cache@v4
+        with:
+          path: _work
+          key: work-${{ github.run_id }}
+          restore-keys: work-
+
+      - name: Forecast
+        id: forecast
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.forecast)
+        shell: bash
+        env:
+          HAZE_STATE: _old/state
+          HAZE_WORK: _work
+          HAZE_SITE_DATA: _old/data
+          DATA_GOV_SG_API_KEY: ${{ secrets.DATA_GOV_SG_API_KEY }}
+        run: |
+          if [ "${{ github.event.schedule }}" = "40 18 * * *" ]; then
+            python -m pipeline.run --skip-if-done | tee run.log
+            if grep -q "is already there" run.log; then echo "skip=true" >> "$GITHUB_OUTPUT"; fi
+          else
+            python -m pipeline.run
+          fi
+
+      - name: Prune old downloads
+        run: find _work -type f -mtime +7 -delete 2> /dev/null || true
+
+      - name: Build the site
+        if: steps.forecast.outputs.skip != 'true'
+        run: |
+          mkdir -p _site
+          cp -r site/. _site/
+          for f in forecast.json map.json history.json og.png; do
+            if [ -f "_old/data/$f" ]; then cp "_old/data/$f" _site/data/; fi
+          done
+          cp -r _old/state _site/state
+          touch _site/.nojekyll
+          ls -la _site _site/data
+
+      - name: Publish (gh-pages)
+        if: steps.forecast.outputs.skip != 'true'
+        run: |
+          cd _site
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Forecast and site, $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · SG Haze Watch</title>
+<meta name="description" content="About SG Haze Watch: the data, the physics model, how good the forecast is, and its limits.">
+<meta property="og:title" content="About SG Haze Watch">
+<meta property="og:image" content="https://kychanbp.github.io/sg-haze-watch/data/og.png">
+<meta name="theme-color" content="#0f6fa8">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
+    <nav class="nav">
+      <a href="./">Forecast</a>
+      <a href="map.html">Pollution map</a>
+      <a href="learn.html">How it works</a>
+      <a href="about.html" class="on">About</a>
+    </nav>
+    <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
+  </header>
+
+  <main>
+    <section class="card">
+      <h1>About SG Haze Watch</h1>
+      <p>SG Haze Watch is a free, open science project. It forecasts the PM2.5 and the PSI in Singapore for the next 7 days, so that friends, families and schools can plan ahead. It also shows how the forecast works, step by step.</p>
+      <div class="callout"><b>This is not an official forecast.</b> For the official readings, the official haze outlook and health advice, use <a href="https://www.haze.gov.sg/">haze.gov.sg</a> from the National Environment Agency (NEA). If you feel unwell in the haze, see a doctor.</div>
+    </section>
+
+    <section class="card">
+      <h2>🔬 The model in 5 lines</h2>
+      <ol>
+        <li>The air over Singapore is one box. The box goes from the ground up to the mixing height (the lid).</li>
+        <li>Each hour, the box gets PM2.5 from Singapore's own emissions and from the air that the wind brings in. The wind, rain and settling take PM2.5 out.</li>
+        <li>The air that comes in carries a background (about 8 µg/m³), ship exhaust, fresh smoke from fires under its path in the last 4 days, and older smoke that hangs over the region.</li>
+        <li>Smoke fades with time (240 hours), rain on the path washes it out, and dry peat makes more smoke from each fire.</li>
+        <li>The model has 12 constants, found from NEA hourly data from April 2014 to 2025. Each forecast starts from the NEA reading at 11 pm, and corrects with the model's recent errors.</li>
+      </ol>
+      <p><a href="learn.html">Read the full lesson →</a></p>
+    </section>
+
+    <section class="card" id="skill">
+      <h2>🎯 How good is the forecast?</h2>
+      <h3>Test 1: hidden years</h3>
+      <p>We found the 12 constants without one year. Then we forecast each day of that year at 11 pm the night before, with the weather and fires as they really were. We compare with the simple guess "tomorrow is the same as today".</p>
+      <div class="kv">
+        <div><b>23 of 31</b><span>unhealthy days caught in 2015, the big haze year, with 2 false warnings in the year. "Same as today": 21 caught, 10 false.</span></div>
+        <div><b>0.87</b><span>R² of the next-day forecast in 2015 (0.78 in 2019, 0.73 in 2023). "Same as today": 0.75, 0.62 and 0.60.</span></div>
+      </div>
+      <p class="small" style="margin-top:8px">Unhealthy day: day-mean PM2.5 above 55.5 µg/m³ (about PSI 100). R²: the part of the day-to-day change (of log PM2.5) that the forecast explains; 1 is perfect.</p>
+      <h3 style="margin-top:14px">Test 2: this haze season, as a real forecast</h3>
+      <p id="skill-intro">The nightly job was run again for each day of this season, with only the data that was known at that time: the ECMWF weather forecast (not the real weather), and fires only up to the day before. This is the same test as a real forecast.</p>
+      <div class="tablewrap"><table class="simple" id="skill-table"><tr><td>Loading…</td></tr></table></div>
+      <p class="small" style="margin-top:8px">Error: the forecast is too high (+) or too low (−), as a mean over the days. Typical miss: the mean difference from the measured day-mean PM2.5. In range: the measured value was inside the forecast range (the range is set to hold 8 of 10 days). Caught: days with PSI above 100 that had the flag. False: clear days (PSI 100 or less) that had the flag by mistake.</p>
+      <h3 style="margin-top:14px">How we correct the forecast</h3>
+      <p>The physics model is not perfect. When it was too low yesterday, it is often too low tomorrow too. So each forecast uses two corrections, both found from past data:</p>
+      <ul>
+        <li><b>Recent error:</b> the mean error of the model in the last 28 days. In the 2026 test the model alone was about one third too low, so this term raised the forecast.</li>
+        <li><b>Error memory:</b> part of yesterday's extra error stays: 46% for the next day, and less (37% to 16%) for the days after.</li>
+      </ul>
+      <p>The chance of PSI above 100 comes from 400 runs with errors of the same size as in the tests. The error is larger on haze days and for days far ahead, so the range is wider there.</p>
+    </section>
+
+    <section class="card">
+      <h2>⚠️ Warnings</h2>
+      <ul>
+        <li><b>Haze warning ⚠️:</b> the chance of PSI above 100 is 50% or more.</li>
+        <li><b>Haze watch 👀:</b> the chance is <span id="pwatch">15%</span> or more. We chose the line that catches 9 of 10 days with PSI above 100 in the 2026 test.</li>
+        <li id="flag-test" hidden></li>
+        <li>PSI here is the highest 24-hour PSI of the day, as the mean of the five NEA regions. One region can be higher.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>🧱 Limits</h2>
+      <ul>
+        <li>One box: one value for all of Singapore.</li>
+        <li id="onset">When the haze arrives after a clear day, the warning often comes late.</li>
+        <li>Nobody knows next week's fires. The outlook guesses that the fires stay as in the last 3 days.</li>
+        <li>The mixing height is the average for the month and the hour, not a forecast.</li>
+        <li>The hourly shape is less sure than the day mean.</li>
+        <li>If a data source is late or down, the forecast can be old. The page then shows a notice.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>📚 Data and credits</h2>
+      <div class="tablewrap"><table class="simple">
+        <tr><th>Data</th><th>Source</th><th>Use</th></tr>
+        <tr><td>PM2.5 and PSI readings</td><td>National Environment Agency, via <a href="https://data.gov.sg">data.gov.sg</a> (Singapore Open Data Licence)</td><td>start of each forecast, error correction, tests</td></tr>
+        <tr><td>Fires</td><td>NASA FIRMS / LANCE, VIIRS 375 m active fires (Suomi NPP, NOAA-20, NOAA-21), through <a href="https://earthdata.nasa.gov/gibs">NASA GIBS</a></td><td>fire power under the air path</td></tr>
+        <tr><td>Weather forecast</td><td><a href="https://www.ecmwf.int/en/forecasts/datasets/open-data">ECMWF open data</a>, IFS (CC BY 4.0)</td><td>wind at 3 heights, rain</td></tr>
+        <tr><td>Rain on peat</td><td><a href="https://www.chc.ucsb.edu/data/chirps">CHIRPS</a> v2.0 (Climate Hazards Center, UC Santa Barbara)</td><td>peat dryness</td></tr>
+        <tr><td>Mixing height, soil type, land</td><td>ERA5 (Copernicus Climate Change Service), via NSF NCAR</td><td>height of the lid, peatland, land and sea</td></tr>
+        <tr><td>Emissions</td><td><a href="https://edgar.jrc.ec.europa.eu/">EDGAR v8.1</a>, European Commission JRC (CC BY 4.0)</td><td>ship exhaust, emission maps</td></tr>
+        <tr><td>Borders</td><td>Natural Earth (public domain)</td><td>names of places</td></tr>
+        <tr><td>Map</td><td>Leaflet, Esri base map tiles</td><td>maps</td></tr>
+      </table></div>
+      <p class="small" style="margin-top:8px">Contains modified Copernicus Climate Change Service information. Neither the European Commission nor ECMWF is responsible for any use of this information.</p>
+    </section>
+
+    <section class="card">
+      <h2>🔒 Privacy</h2>
+      <p>This site has no cookies, no tracking and no ads. Your browser only remembers your light or dark mode choice. The "Right now" box asks data.gov.sg for the latest NEA readings directly from your browser.</p>
+      <p>The code is open: <a href="https://github.com/kychanbp/sg-haze-watch">github.com/kychanbp/sg-haze-watch</a>. You can report a problem there.</p>
+    </section>
+  </main>
+
+  <footer class="foot"><p><b>Not an official forecast.</b> Official information: <a href="https://www.haze.gov.sg/">haze.gov.sg</a> (NEA).</p></footer>
+</div>
+<script src="assets/common.js"></script>
+<script src="assets/about.js"></script>
+</body>
+</html>
