@@ -6,6 +6,7 @@ D = 0: the peat is wet. D = 100 mm: the water table is about 0.4-0.5 m down. Dry
 State: STATE/dryness.npz holds the last 90 days. Each run adds the new CHIRPS preliminary days (monthly netCDF, ~3.5 MB).
 """
 import io
+import warnings
 import numpy as np
 import pandas as pd
 import requests
@@ -38,7 +39,8 @@ def regrid(ds):
         mi = (la > a - 0.25) & (la < a + 0.25)
         for j, b in enumerate(LON):
             mj = (lo > b - 0.25) & (lo < b + 0.25)
-            with np.errstate(all="ignore"):
+            with np.errstate(all="ignore"), warnings.catch_warnings():
+                warnings.simplefilter("ignore", RuntimeWarning)          # sea cells: all NaN
                 G[:, i, j] = np.nanmean(v[:, mi][:, :, mj].reshape(v.shape[0], -1), axis=1)
     return pd.DatetimeIndex(x.time.values), G
 
