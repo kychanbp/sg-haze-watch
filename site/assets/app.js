@@ -78,7 +78,7 @@
   if (!navigator.onLine) { notes.push("📴 No network. This is the last forecast that this device saved."); addEventListener("online", () => location.reload(), { once: true }); }
   if (Date.now() - issued > 30 * 3600e3) notes.push(`This forecast was made on ${F.issued_sgt.replace("T", " ")} (Singapore time) and is old.` + (navigator.onLine ? " The nightly update may have failed." : ""));
   if (notes.length) { $("stale").style.display = "block"; $("stale").textContent = notes.join(" "); }
-  $("updated").textContent = `Forecast made ${F.issued_sgt.replace("T", " ")} Singapore time · weather: ECMWF IFS run ${F.inputs.ifs_run} · fires to ${F.inputs.fires_to} · readings to ${F.inputs.obs_to.replace("T", " ")} · peat dryness ${F.inputs.peat_dryness_mm ?? "–"} mm. A new forecast comes every night at about 00:30.`;
+  $("updated").textContent = `Forecast made ${F.issued_sgt.replace("T", " ")} Singapore time · weather: ECMWF IFS run ${F.inputs.ifs_run} · fires to ${F.inputs.fires_to} · readings to ${F.inputs.obs_to.replace("T", " ")} · peat dryness ${F.inputs.peat_dryness_mm ?? "–"} mm. A new forecast comes every night, usually between 00:30 and 03:30 (Singapore time).`;
 
   // ---------- 7 days ----------
   $("days").innerHTML = days.map((d, i) => {
