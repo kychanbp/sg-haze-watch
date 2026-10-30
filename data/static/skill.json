@@ -1,0 +1,301 @@
+{
+ "first": "2026-08-09",
+ "last": "2026-10-23",
+ "p_watch": 0.15,
+ "leads": [
+  {
+   "lead": 1,
+   "n": 76,
+   "bias": -0.037,
+   "sd": 0.285,
+   "rmse": 0.286,
+   "mae_pm25": 10.1,
+   "mae_psi": 6.7,
+   "in_range": 0.882,
+   "psi_in_range": 0.711,
+   "free_bias": -0.4,
+   "warn": {
+    "events": 27,
+    "hits": 22,
+    "misses": 5,
+    "false_alarms": 0,
+    "clear_days": 49,
+    "pod": 0.815,
+    "far_clear": 0.0
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 25,
+    "misses": 2,
+    "false_alarms": 5,
+    "clear_days": 49,
+    "pod": 0.926,
+    "far_clear": 0.102
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 23,
+    "misses": 4,
+    "false_alarms": 5,
+    "clear_days": 49,
+    "pod": 0.852,
+    "far_clear": 0.102
+   }
+  },
+  {
+   "lead": 2,
+   "n": 75,
+   "bias": -0.057,
+   "sd": 0.39,
+   "rmse": 0.392,
+   "mae_pm25": 13.3,
+   "mae_psi": 14.8,
+   "in_range": 0.827,
+   "psi_in_range": 0.893,
+   "free_bias": -0.397,
+   "warn": {
+    "events": 27,
+    "hits": 17,
+    "misses": 10,
+    "false_alarms": 2,
+    "clear_days": 48,
+    "pod": 0.63,
+    "far_clear": 0.042
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 23,
+    "misses": 4,
+    "false_alarms": 12,
+    "clear_days": 48,
+    "pod": 0.852,
+    "far_clear": 0.25
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 20,
+    "misses": 7,
+    "false_alarms": 2,
+    "clear_days": 48,
+    "pod": 0.741,
+    "far_clear": 0.042
+   }
+  },
+  {
+   "lead": 3,
+   "n": 74,
+   "bias": -0.04,
+   "sd": 0.383,
+   "rmse": 0.383,
+   "mae_pm25": 14.3,
+   "mae_psi": 17.9,
+   "in_range": 0.797,
+   "psi_in_range": 0.838,
+   "free_bias": -0.369,
+   "warn": {
+    "events": 27,
+    "hits": 16,
+    "misses": 11,
+    "false_alarms": 1,
+    "clear_days": 47,
+    "pod": 0.593,
+    "far_clear": 0.021
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 19,
+    "misses": 8,
+    "false_alarms": 16,
+    "clear_days": 47,
+    "pod": 0.704,
+    "far_clear": 0.34
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 17,
+    "misses": 10,
+    "false_alarms": 2,
+    "clear_days": 47,
+    "pod": 0.63,
+    "far_clear": 0.043
+   }
+  },
+  {
+   "lead": 4,
+   "n": 73,
+   "bias": -0.057,
+   "sd": 0.401,
+   "rmse": 0.402,
+   "mae_pm25": 15.7,
+   "mae_psi": 19.5,
+   "in_range": 0.822,
+   "psi_in_range": 0.836,
+   "free_bias": -0.38,
+   "warn": {
+    "events": 27,
+    "hits": 17,
+    "misses": 10,
+    "false_alarms": 2,
+    "clear_days": 46,
+    "pod": 0.63,
+    "far_clear": 0.043
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 23,
+    "misses": 4,
+    "false_alarms": 21,
+    "clear_days": 46,
+    "pod": 0.852,
+    "far_clear": 0.457
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 17,
+    "misses": 10,
+    "false_alarms": 4,
+    "clear_days": 46,
+    "pod": 0.63,
+    "far_clear": 0.087
+   }
+  },
+  {
+   "lead": 5,
+   "n": 72,
+   "bias": -0.074,
+   "sd": 0.434,
+   "rmse": 0.438,
+   "mae_pm25": 17.5,
+   "mae_psi": 20.9,
+   "in_range": 0.792,
+   "psi_in_range": 0.861,
+   "free_bias": -0.394,
+   "warn": {
+    "events": 27,
+    "hits": 13,
+    "misses": 14,
+    "false_alarms": 1,
+    "clear_days": 45,
+    "pod": 0.481,
+    "far_clear": 0.022
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 23,
+    "misses": 4,
+    "false_alarms": 21,
+    "clear_days": 45,
+    "pod": 0.852,
+    "far_clear": 0.467
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 14,
+    "misses": 13,
+    "false_alarms": 4,
+    "clear_days": 45,
+    "pod": 0.519,
+    "far_clear": 0.089
+   }
+  },
+  {
+   "lead": 6,
+   "n": 71,
+   "bias": -0.105,
+   "sd": 0.423,
+   "rmse": 0.433,
+   "mae_pm25": 17.5,
+   "mae_psi": 21.8,
+   "in_range": 0.831,
+   "psi_in_range": 0.831,
+   "free_bias": -0.419,
+   "warn": {
+    "events": 27,
+    "hits": 10,
+    "misses": 17,
+    "false_alarms": 1,
+    "clear_days": 44,
+    "pod": 0.37,
+    "far_clear": 0.023
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 25,
+    "misses": 2,
+    "false_alarms": 17,
+    "clear_days": 44,
+    "pod": 0.926,
+    "far_clear": 0.386
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 16,
+    "misses": 11,
+    "false_alarms": 2,
+    "clear_days": 44,
+    "pod": 0.593,
+    "far_clear": 0.045
+   }
+  },
+  {
+   "lead": 7,
+   "n": 70,
+   "bias": -0.143,
+   "sd": 0.454,
+   "rmse": 0.472,
+   "mae_pm25": 18.5,
+   "mae_psi": 22.2,
+   "in_range": 0.786,
+   "psi_in_range": 0.771,
+   "free_bias": -0.449,
+   "warn": {
+    "events": 27,
+    "hits": 10,
+    "misses": 17,
+    "false_alarms": 2,
+    "clear_days": 43,
+    "pod": 0.37,
+    "far_clear": 0.047
+   },
+   "warn_or_watch": {
+    "events": 27,
+    "hits": 24,
+    "misses": 3,
+    "false_alarms": 19,
+    "clear_days": 43,
+    "pod": 0.889,
+    "far_clear": 0.442
+   },
+   "psi_gt_92": {
+    "events": 27,
+    "hits": 13,
+    "misses": 14,
+    "false_alarms": 3,
+    "clear_days": 43,
+    "pod": 0.481,
+    "far_clear": 0.07
+   }
+  }
+ ],
+ "lead1": {
+  "in_range_pct": 88,
+  "mae_pm25": 10.1,
+  "mae_psi": 6.7,
+  "caught": 25,
+  "events": 27,
+  "false_alarms": 5,
+  "clear_days": 49,
+  "warn_caught": 22,
+  "warn_false": 0,
+  "false_psi": [
+   86,
+   96
+  ],
+  "onsets": {
+   "events": 6,
+   "warn": 2,
+   "flag": 5
+  }
+ },
+ "text": "For the next day, the PM2.5 was inside the forecast range on 88% of the days. The forecast flagged 25 of the 27 days with PSI above 100 (warning or watch), with 5 false flags on 49 clear days (on these days the PSI was 86 to 96)."
+}

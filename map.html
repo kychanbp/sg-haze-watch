@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pollution Map · SG Haze Watch</title>
+<meta name="description" content="Where does the PM2.5 in Singapore come from? A map of today's fires, peatland, ship lanes, traffic, industry and farms, the path of the air, and the box of air over Singapore with its lid.">
+<meta property="og:title" content="Where does Singapore's haze come from?">
+<meta property="og:description" content="Map of fires, peatland, ships, traffic and industry, the path of the air, and the box over Singapore.">
+<meta property="og:image" content="https://kychanbp.github.io/sg-haze-watch/data/og.png">
+<meta name="theme-color" content="#eef5fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1620" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Haze Watch">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
+    <nav class="nav" aria-label="Main">
+      <a href="./">Forecast</a>
+      <a href="map.html" class="on" aria-current="page">Pollution map</a>
+      <a href="learn.html">How it works</a>
+      <a href="about.html">About</a>
+    </nav>
+    <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
+  </header>
+
+  <main>
+    <section class="card" id="mapcard">
+      <h1>🗺️ Where does our PM2.5 come from?</h1>
+      <div class="mapgrid">
+        <div class="mapbox" id="bigmap" aria-label="Map of pollution sources around Singapore"></div>
+        <aside class="layer-list" id="layers">
+          <div class="lgroup">
+            <h3>Fires (change every day)</h3>
+            <div class="lrow">
+              <label class="on"><input type="checkbox" data-layer="fires" checked><span class="sw" style="background:#ff8a1c"></span><span><b>🔥 Fires seen by satellite</b><small id="fires-note">Each dot is a fire area. A bigger dot means more fire power.</small></span></label>
+              <label><input type="checkbox" data-layer="peat"><span class="sw" style="background:#8a6a43"></span><span><b>🟫 Peatland</b><small>Peat is wet, dead plant material. When it dries and burns, it makes a lot of smoke for a long time.</small></span></label>
+            </div>
+          </div>
+          <div class="lgroup">
+            <h3>Background: always there</h3>
+            <div class="lrow">
+              <label class="on"><input type="radio" name="emis" value="all" checked><span class="sw" style="background:#b73779"></span><span><b>🏙️ All human emissions</b><small>All the PM2.5 that people put into the air in a year.</small></span></label>
+              <label><input type="radio" name="emis" value="ships"><span class="sw" style="background:#2b7bba"></span><span><b>🚢 Ships</b><small>Thousands of ships use the sea lanes near Singapore. Their exhaust makes particles.</small></span></label>
+              <label><input type="radio" name="emis" value="traffic"><span class="sw" style="background:#d0312d"></span><span><b>🚗 Road traffic</b><small>Cars, buses, lorries and motorcycles.</small></span></label>
+              <label><input type="radio" name="emis" value="power_industry"><span class="sw" style="background:#6a51a3"></span><span><b>🏭 Power stations and industry</b><small>Power plants, refineries and factories.</small></span></label>
+              <label><input type="radio" name="emis" value="homes_farms"><span class="sw" style="background:#2f9a57"></span><span><b>🏠 Homes and farms</b><small>Cooking with wood or charcoal, crop burning and farming.</small></span></label>
+              <label><input type="radio" name="emis" value="none"><span class="sw" style="background:transparent;border:1px solid var(--line)"></span><span><b>No emissions layer</b><small>The map shows no emissions.</small></span></label>
+            </div>
+            <div><div class="ramp" id="ramp"></div><div class="ramp-lab"><span>0.05</span><span>0.5</span><span>5</span><span>50 t per km² per year</span></div></div>
+          </div>
+          <div class="lgroup">
+            <h3>The air and our box</h3>
+            <div class="lrow">
+              <label class="on"><input type="checkbox" data-layer="path" checked><span class="sw" style="background:#0f6fa8"></span><span><b>💨 Path of the air (smoke level)</b><small>Where the air was in the 4 days before it reaches Singapore, about 800 m up. Smoke travels at this height.</small></span></label>
+              <label><input type="checkbox" data-layer="path100"><span class="sw" style="background:#14a3a3"></span><span><b>🌊 Path of the air near the sea</b><small>The same at 100 m. Ship exhaust stays low, so the model uses this path for ships.</small></span></label>
+              <label class="on"><input type="checkbox" data-layer="box" checked><span class="sw" style="background:transparent;border:2px dashed #e2741b"></span><span><b>📦 Our box</b><small>The model treats the air over Singapore as one box, about 56 km long.</small></span></label>
+            </div>
+          </div>
+          <p class="linfo" id="linfo" aria-live="polite"></p>
+        </aside>
+      </div>
+      <div class="chiprow"><span class="small">Path for:</span><div class="chips scroll" id="map-days"></div></div>
+      <p style="margin-top:12px">The PM2.5 in Singapore comes from many sources. <b>Fires</b> in Sumatra and Borneo make the big haze days. <b>Ships, traffic, power stations, industry, homes and farms</b> are always there. They make the <b>background</b>: the PM2.5 that the air brings on a normal day. Turn the layers on and off to see them.</p>
+    </section>
+
+    <section class="card" id="side">
+      <h2>📦 The box over Singapore, seen from the side</h2>
+      <p>The model does not follow every particle. It follows one number: the PM2.5 in a box of air over Singapore. The box goes from the ground up to a <b>lid</b>. The lid is a warm layer of air: a <b>temperature inversion</b>. The lid goes down at night and up in the day. Press <b>Play the day</b> and look at the lid, the dots (particles) and the temperature line on the right.</p>
+      <div class="chips scroll" id="sv-days" aria-label="Forecast day"></div>
+      <div id="sideview"></div>
+      <div class="callout small">Why is the PM2.5 often higher at night? The same pollution goes into a box that is 3 to 5 times thinner, so each cubic metre gets more particles. This is <b>concentration = mass ÷ volume</b>. Lid heights: forecast from the month-and-hour average of 2014–2025 (ERA5). Temperature line: a sketch of a typical day, not a measurement. <a href="learn.html#lid">Learn more about the lid</a>.</div>
+    </section>
+
+    <section class="card" id="numbers">
+      <h2>🌏 How much comes from each source?</h2>
+      <div class="grid2">
+        <div>
+          <h3>In our air this week (model)</h3>
+          <p class="small">PM2.5 in Singapore by source, day mean, in µg/m³. On a clear day, the background, ships and our own emissions give about 10 to 15 µg/m³. Smoke from fires adds the rest.</p>
+          <div id="stacks"></div>
+          <div class="legend" id="stack-legend" style="margin-top:8px"></div>
+        </div>
+        <div>
+          <h3>What people put into the air in a year</h3>
+          <p class="small">Primary PM2.5 emissions on this map (EDGAR 2022). The map area is about 2,800 km by 1,800 km. "Near Singapore" is an area of about 55 km by 67 km around Singapore, with the port and the sea lanes.</p>
+          <div class="tablewrap"><table class="simple" id="emis-table"></table></div>
+          <p class="small" style="margin-top:8px">Fires are not in this table. Fire smoke changes very much from day to day and from year to year. In a bad haze year, the fires make more smoke in a few weeks than all the sources in this table make in a year.</p>
+        </div>
+      </div>
+      <div class="callout"><b>🌏 What is the background?</b> Even with no fires, the air that comes to Singapore brings some PM2.5: sea salt, dust, and old pollution from the cities, industry, farms and ships of the whole region (the coloured layers on the map). The model gives it one number: about <b>8 µg/m³</b>. It changes only a little with the path of the air.</div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><b>Not an official forecast.</b> For official readings and health advice, see <a href="https://www.haze.gov.sg/">haze.gov.sg</a> (NEA).</p>
+    <p>Fires: NASA FIRMS / GIBS (VIIRS 375 m). Emissions: <a href="https://edgar.jrc.ec.europa.eu/">EDGAR v8.1</a> (European Commission JRC), year 2022. Peatland: ERA5 soil type (Copernicus). Air paths: ECMWF open data (CC BY 4.0). Map tiles: Esri. <a href="about.html">About the data</a></p>
+  </footer>
+</div>
+<nav class="tabbar" aria-label="Main">
+  <a href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.6a3.6 3.6 0 0 0 .3-7.2 5.2 5.2 0 0 0-10-1.2 4.2 4.2 0 0 0 .1 8.4z"/><path d="M8.5 21.5h7"/></svg><span>Forecast</span></a>
+  <a href="map.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Map</span></a>
+  <a href="learn.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-1.8-1.6-4.6-2.3-8-2v13c3.4-.3 6.2.4 8 2 1.8-1.6 4.6-2.3 8-2V5c-3.4-.3-6.2.4-8 2z"/><path d="M12 7v13"/></svg><span>Learn</span></a>
+  <a href="about.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.1"/></svg><span>About</span></a>
+</nav>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/box.js"></script>
+<script src="assets/map.js"></script>
+</body>
+</html>
