@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How It Works · SG Haze Watch</title>
+<meta name="description" content="How a simple physics model forecasts the haze in Singapore: PM2.5, the box of air, the lid (temperature inversion), wind, rain, fires and peat. With a box lab and a quiz.">
+<meta property="og:title" content="How do we forecast the haze? A physics lesson">
+<meta property="og:description" content="One box of air, a lid that moves with the sun, smoke from far away. Try the box lab and the quiz.">
+<meta property="og:image" content="https://kychanbp.github.io/sg-haze-watch/data/og.png">
+<meta name="theme-color" content="#eef5fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1620" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Haze Watch">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="./"><img src="assets/icon.svg" alt="" width="42" height="42"><b>SG Haze Watch</b></a>
+    <nav class="nav" aria-label="Main">
+      <a href="./">Forecast</a>
+      <a href="map.html">Pollution map</a>
+      <a href="learn.html" class="on" aria-current="page">How it works</a>
+      <a href="about.html">About</a>
+    </nav>
+    <button class="theme-btn" type="button" aria-label="Switch light or dark mode">🌙</button>
+  </header>
+
+  <section class="card">
+    <div class="hero">
+      <div class="mascot" id="puff"></div>
+      <div>
+        <div class="kicker">A lesson for students (age 13 and up)</div>
+        <h1>How do we forecast the haze?</h1>
+        <p>Hi, I am <b>Puff</b>, a small cloud of air. Our forecast does not use magic, and it does not use artificial intelligence. It uses <b>physics</b>: one box of air, a lid that goes up and down with the sun, and smoke that travels with the wind. Follow me through 10 short steps. Then try the <a href="#lab">box lab</a> and the <a href="#quiz">quiz</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <nav class="chapbar" id="chapbar" aria-label="Chapters of the lesson">
+    <div class="chips" id="toc"></div>
+    <i class="chapprog" id="chapprog"></i>
+  </nav>
+
+  <main class="lesson">
+    <section class="card" id="pm25">
+      <h2>What is PM2.5?</h2>
+      <div class="grid2">
+        <div>
+          <p><b>PM2.5</b> means "particulate matter smaller than 2.5 micrometres". These are very small pieces of solid or liquid in the air. One PM2.5 particle is about <b>30 times thinner than a hair</b>. You cannot see one particle. You can see millions of them as haze.</p>
+          <p>PM2.5 goes deep into your lungs. Some of it goes into your blood. This is why the haze is bad for your health.</p>
+          <p>We measure PM2.5 in <b>µg/m³</b>: micrograms of particles in one cubic metre of air. One cubic metre is the air in a big fridge box.</p>
+          <div class="kv">
+            <div><b>11 µg/m³</b><span>a normal day in Singapore (median, 2022 to 2024)</span></div>
+            <div><b>196 µg/m³</b><span>24 September 2015, the worst day: 18 times more than normal</span></div>
+          </div>
+        </div>
+        <div>
+          <svg class="chart" viewBox="0 0 400 230" role="img" aria-label="Size of a PM2.5 particle compared with sand, a hair, pollen and PM10">
+            <circle cx="78" cy="112" r="72" fill="#f2d7a6"/><text x="78" y="110" text-anchor="middle" fill="#6b4a12" style="font-weight:800;font-size:13px">fine sand</text><text x="78" y="126" text-anchor="middle" fill="#6b4a12" style="font-size:11px">90 µm</text>
+            <rect x="166" y="30" width="112" height="164" rx="8" fill="#4a3a2a"/><text x="222" y="110" text-anchor="middle" fill="#fff" style="font-weight:800;font-size:13px">a hair</text><text x="222" y="126" text-anchor="middle" fill="#fff" style="font-size:11px">70 µm wide</text>
+            <circle cx="314" cy="112" r="16" fill="#e3b505"/><text x="314" y="146" text-anchor="middle" style="font-size:11px">pollen</text><text x="314" y="159" text-anchor="middle" style="font-size:11px">20 µm</text>
+            <circle cx="352" cy="112" r="8" fill="#9aa8b3"/><text x="352" y="92" text-anchor="middle" style="font-size:11px">PM10</text>
+            <circle cx="378" cy="112" r="2" fill="#d23a3a"/><text x="392" y="190" text-anchor="end" fill="#d23a3a" style="font-weight:800;font-size:12px">PM2.5 (2.5 µm) ↑</text>
+          </svg>
+          <p class="small">Sizes to scale. 1 µm (micrometre) = 1 thousandth of a millimetre.</p>
+        </div>
+      </div>
+      <h3 style="margin-top:10px">PSI: the number in the news</h3>
+      <p>NEA changes the 24-hour average PM2.5 into the <b>Pollutant Standards Index (PSI)</b>. When the 24-hour PM2.5 is above 55.5 µg/m³, the PSI is above 100: <b>unhealthy</b>.</p>
+      <div class="tablewrap"><table class="simple">
+        <tr><th>PSI</th><th>24-hour PM2.5</th><th>Band</th><th>Advice for healthy people (NEA)</th></tr>
+        <tr><td>0–50</td><td>0–12 µg/m³</td><td><span class="pill b-good">Good</span></td><td>Normal activities.</td></tr>
+        <tr><td>51–100</td><td>13–55 µg/m³</td><td><span class="pill b-moderate">Moderate</span></td><td>Normal activities.</td></tr>
+        <tr><td>101–200</td><td>56–150 µg/m³</td><td><span class="pill b-unhealthy">Unhealthy</span></td><td>Do less long or hard exercise outdoors.</td></tr>
+        <tr><td>201–300</td><td>151–250 µg/m³</td><td><span class="pill b-very-unhealthy">Very unhealthy</span></td><td>Avoid long or hard exercise outdoors.</td></tr>
+        <tr><td>above 300</td><td>above 250 µg/m³</td><td><span class="pill b-hazardous">Hazardous</span></td><td>Keep outdoor activity to a minimum.</td></tr>
+      </table></div>
+      <p class="small" style="margin-top:6px">Older people, children, pregnant women and people with heart or lung disease must be more careful. See <a href="https://www.haze.gov.sg/">haze.gov.sg</a> for the full advice.</p>
+    </section>
+
+    <section class="card" id="sources">
+      <h2>Where do the particles come from?</h2>
+      <div class="kv">
+        <div><b>🚗 Local</b><span>Traffic, industry, power stations and cooking in Singapore. More in the day, and 17% less on weekends.</span></div>
+        <div><b>🚢 Ships</b><span>Thousands of ships pass Singapore. Sulphur in their fuel makes tiny sulphate particles.</span></div>
+        <div><b>🌏 Background</b><span>The air always brings some particles: sea salt, dust and old pollution from the whole region.</span></div>
+        <div><b>🔥 Fires</b><span>Peat and forest fires in Sumatra and Borneo. The wind carries the smoke hundreds of kilometres.</span></div>
+      </div>
+      <p style="margin-top:12px">The first three sources are always there. Together they give the normal 10 to 15 µg/m³. Fire smoke comes only in some years, mostly from August to October. It causes the big haze days. Our model must include all four sources, because a forecast for a normal day is as important as a forecast for a haze day. <a href="map.html">See the sources on the map →</a></p>
+    </section>
+
+    <section class="card" id="box">
+      <h2>The big idea: one box of air</h2>
+      <div class="grid2" style="align-items:center">
+        <div>
+          <p>Real air is very complex. So we make it simple. We pretend that the air over Singapore is <b>one box</b>. The air in the box is well mixed, so the PM2.5 is the same everywhere in it. The box is about <b>56 km long</b>. It goes from the ground up to a <b>lid</b>.</p>
+          <p>We do not follow every particle. We follow <b>one number</b>: the PM2.5 in the box, <b>C</b>. Each hour, we add what comes in and take away what goes out. Mass cannot appear or disappear. This is <b>conservation of mass</b>.</p>
+          <p class="eq">change in the box = what comes in − what goes out</p>
+        </div>
+        <div class="tablewrap"><table class="simple">
+          <tr><th>Bathtub</th><th>Box of air</th><th></th></tr>
+          <tr><td>💧 Water level</td><td>PM2.5 in the box, C</td><td>the number we follow</td></tr>
+          <tr><td>🚰 Tap</td><td>Emissions from the ground, E</td><td>in</td></tr>
+          <tr><td>🚰 Second tap</td><td>Particles in the air that comes in, C<sub>in</sub></td><td>in</td></tr>
+          <tr><td>🕳️ Drain</td><td>The wind takes box air away</td><td>out</td></tr>
+          <tr><td>🕳️ Second drain</td><td>Rain and settling remove particles</td><td>out</td></tr>
+        </table></div>
+      </div>
+      <p>If more water comes in than goes out, the level goes up. If the drain is bigger than the tap, the level goes down. If in and out are equal, the level stays the same. This is <b>equilibrium</b>.</p>
+    </section>
+
+    <section class="card" id="lid">
+      <h2>The lid: a temperature inversion</h2>
+      <div class="grid2">
+        <div>
+          <p><b>Day.</b> The sun heats the ground. The ground heats the air near it. Warm air expands, becomes lighter and goes up, like a hot-air balloon. Cooler air goes down to take its place. This is <b>convection</b>. It mixes the air up to about 800 m. The box is tall.</p>
+        </div>
+        <div>
+          <p><b>Night.</b> The ground cools quickly. The air near the ground becomes cooler than the air above it. Normally, air gets cooler as you go up. Here it gets <b>warmer</b> as you go up. This is a <b>temperature inversion</b>. Cool air is heavy, so it cannot go up through the warm layer. The warm layer is a lid at about 200 m. The box is thin.</p>
+        </div>
+      </div>
+      <div id="lidview"></div>
+      <div class="callout"><b>Concentration = mass ÷ volume.</b> Put the same mass of particles into a box that is 4 times thinner, and the PM2.5 is 4 times higher. This is why the PM2.5 often goes up in the evening and at night, and goes down in the afternoon.</div>
+      <details><summary><b>Try it at home or in class</b></summary>
+        <p>Fill a clear glass container with warm water. Use a dropper to put some cold water with blue food colouring at the bottom. The blue water stays at the bottom: this is an inversion. Now heat the bottom of a beaker of water that has some dye in it. The dye goes up and mixes: this is convection.</p>
+      </details>
+    </section>
+
+    <section class="card" id="wind">
+      <h2>Wind changes the air in the box</h2>
+      <p>The wind pushes old air out of the box and brings new air in. The time to change all the air in the box is the <b>residence time</b>:</p>
+      <p class="eq">residence time = box length ÷ wind speed = L ÷ U</p>
+      <div class="slider"><label for="w-u">Wind speed U</label><input type="range" id="w-u" min="0.5" max="8" step="0.1" value="3"><output id="w-uo">3.0 m/s</output></div>
+      <p id="w-text" class="callout"></p>
+      <p>Strong wind takes our own pollution away quickly. But if the air that comes in is full of smoke, strong wind also brings the smoke in quickly. So wind is good on a clear day, and it can be bad on a haze day.</p>
+    </section>
+
+    <section class="card" id="equation">
+      <h2>The box equation</h2>
+      <p>This is the real equation in our computer code. It gives the change of the PM2.5 in one hour:</p>
+      <p class="eq">ΔC per hour = <span class="term" style="background:color-mix(in srgb,var(--local) 22%,transparent)">E/h</span> − <span class="term" style="background:color-mix(in srgb,var(--ship) 22%,transparent)">(U/L)(C − C<sub>in</sub>)</span> − <span class="term" style="background:color-mix(in srgb,var(--background) 30%,transparent)">(w/h) C</span> − <span class="term" style="background:color-mix(in srgb,var(--brand) 22%,transparent)">λ P C</span></p>
+      <div class="tablewrap"><table class="simple">
+        <tr><th>Term</th><th>What it means</th><th>Our value</th></tr>
+        <tr><td>E/h</td><td>Emissions E from the ground, spread into a box of height h. A thin box gets more PM2.5 from the same emissions.</td><td>E ≈ 190 µg of PM2.5 on each m² each hour (more in the day, less at night)</td></tr>
+        <tr><td>(U/L)(C − C<sub>in</sub>)</td><td>The wind U changes a part U/L of the box air each hour. The old air takes C out. The new air brings C<sub>in</sub> in. If C<sub>in</sub> is bigger than C, this term adds particles: that is how haze arrives.</td><td>L ≈ 56 km</td></tr>
+        <tr><td>(w/h) C</td><td>Particles fall slowly to the ground (settling).</td><td>w = 0.002 m/s</td></tr>
+        <tr><td>λ P C</td><td>Rain P washes particles out. Each mm of rain removes the same part of the particles.</td><td>λ ≈ 0.06 per mm</td></tr>
+        <tr><td>C<sub>in</sub></td><td>PM2.5 in the air that comes in: background + ship exhaust + fresh fire smoke + old regional smoke.</td><td>background ≈ 8 µg/m³</td></tr>
+      </table></div>
+      <details><summary><b>Where does each term come from? (for older students)</b></summary>
+        <p>The mass in the box is M = C × A × h, where A is the ground area of the box. To get the change of C, divide each mass flow by the volume A × h.</p>
+        <p><b>Emissions:</b> the ground puts E micrograms on each m² each second, so E × A in total. Divide by A × h: the area cancels, and you get E/h.</p>
+        <p><b>Wind:</b> air goes through the side of the box (area W × h) with speed U. The volume flow is U × W × h. Divide by the box volume L × W × h: a part U/L of the air changes each second. That air takes C out and brings C<sub>in</sub> in.</p>
+        <p><b>Settling:</b> particles fall with speed w. In one second, the particles in the lowest w metres reach the ground. That mass is w × C × A. Divide by A × h: (w/h) C.</p>
+        <p><b>Rain:</b> each mm of rain removes the same part of the particles. This is a first-order loss, like radioactive decay.</p>
+        <p><b>Exponential approach:</b> for one hour, the inputs stay the same, so the box moves toward its balance value C<sub>eq</sub> = C<sub>in</sub> + (E/h) ÷ (U/L) (no rain, no settling). It moves fast at first, then slowly: C = C<sub>eq</sub> + (C<sub>start</sub> − C<sub>eq</sub>) × e<sup>−kt</sup>. This is the same mathematics as a cup of hot tea that cools.</p>
+      </details>
+    </section>
+
+    <section class="card" id="lab">
+      <h2>The box lab: try it yourself</h2>
+      <p>This is our real box model with our real constants. The lid follows an average October day. Change the inputs and look at the PM2.5 over one day.</p>
+      <div class="grid2">
+        <div>
+          <div class="slider"><label for="l-u">💨 Wind speed</label><input type="range" id="l-u" min="0.5" max="6" step="0.1" value="2"><output id="l-uo"></output></div>
+          <div class="slider"><label for="l-s">🔥 Smoke in the air that comes in</label><input type="range" id="l-s" min="0" max="150" step="1" value="0"><output id="l-so"></output></div>
+          <div class="slider"><label for="l-r">🌧️ Rain each hour</label><input type="range" id="l-r" min="0" max="5" step="0.1" value="0"><output id="l-ro"></output></div>
+          <div class="slider"><label for="l-e">🚗 Singapore's own emissions</label><input type="range" id="l-e" min="0" max="300" step="10" value="100"><output id="l-eo"></output></div>
+          <div class="slider"><label for="l-h">📦 Lid height</label><input type="range" id="l-h" min="0.3" max="2" step="0.05" value="1"><output id="l-ho"></output></div>
+          <div class="chips" id="l-pre"></div>
+        </div>
+        <div>
+          <svg class="chart" id="labchart" viewBox="0 0 520 280" role="img" aria-label="PM2.5 over one day in the box lab"></svg>
+          <div class="kv" id="labout" style="margin-top:8px"></div>
+        </div>
+      </div>
+      <p class="small">The lab runs the box for 3 days with the same inputs and shows the third day. Dark area: PM2.5 from Singapore's own emissions. Light area: PM2.5 that the air brings in. The lab does not include the old regional smoke and ship exhaust changes that the real forecast has.</p>
+    </section>
+
+    <section class="card" id="smoke">
+      <h2>Smoke from far away</h2>
+      <div class="kv">
+        <div><b>1. 🛰️ Satellites see the fires</b><span>Hot fires give off infrared light. The VIIRS satellites measure its power: the fire radiative power, in megawatts (MW).</span></div>
+        <div><b>2. ⏪ Trace the air back</b><span>Start at Singapore. Use the wind to go back in time, hour by hour, for 4 days. This path is a back trajectory.</span></div>
+        <div><b>3. 🧺 Collect the smoke</b><span>Add up the fire power under the path. More fires under the path means more smoke in C<sub>in</sub>.</span></div>
+      </div>
+      <p style="margin-top:12px">We use the wind at <b>925 hPa</b>, about 800 m above the sea. Hot smoke goes up and travels at about this height. If the wind blows from the south-west at 5 m/s, then 1 hour ago the air was 18 km to the south-west. After 96 steps, the path can reach Sumatra or Borneo. <a href="map.html">See today's path on the map →</a></p>
+      <div class="grid2">
+        <div>
+          <h3>Smoke fades with time</h3>
+          <p class="eq">factor = e<sup>−age ÷ τ</sup>, τ = 240 hours</p>
+          <p>Smoke spreads out and mixes away. Smoke that is 2 days old keeps 82%. Smoke that is 4 days old keeps 67%. Half of it is gone after about 7 days.</p>
+        </div>
+        <div>
+          <h3>Rain washes smoke out</h3>
+          <p class="eq">factor = e<sup>−λ × rain</sup>, λ = 0.06 per mm</p>
+          <p>Raindrops catch particles and bring them to the ground. 10 mm of rain on the path keeps 55% of the smoke. 30 mm keeps only 17%. Rain gave the biggest gain when we made the model better.</p>
+        </div>
+      </div>
+      <h3>Why are some years very hazy? Dry peat</h3>
+      <p>Peat is wet, dead plant material, many metres deep. Wet peat does not burn well. Dry peat can burn under the ground for weeks and make a lot of smoke. <b>El Niño</b> (a warm Pacific Ocean) and a <b>positive Indian Ocean Dipole</b> move rain away from Indonesia. Then the peat dries.</p>
+      <p>The model does not use El Niño as an input. It uses the measured rain on each peat area. A water "bucket" for the peat: rain fills it, and evaporation (about 4 mm each day) empties it. With a water deficit of 100 mm, each megawatt of fire gives <b>37% more smoke</b>. This is again a mass balance, now for water!</p>
+      <div class="callout">7 of 15 El Niño or positive-dipole years had a bad haze season. In the other years: only 1 of 36 (1973 to 2024).</div>
+    </section>
+
+    <section class="card" id="forecast">
+      <h2>How we make the forecast each night</h2>
+      <ol>
+        <li><b>00:25, Singapore time.</b> The computer starts. (When the GitHub computers are busy, it can start up to 3 hours later.) It gets the NEA PM2.5 readings up to 11 pm.</li>
+        <li>It gets the fires of the last 28 days from the NASA satellites.</li>
+        <li>It gets the weather forecast for the next 8 days from <b>ECMWF</b> (the European weather centre): wind at 3 heights, and rain.</li>
+        <li>It traces the air back from Singapore every 3 hours, and collects the smoke on each path.</li>
+        <li>It runs the box, hour by hour, for the next 7 days. For the future, it must guess the fires: it uses the mean of the last 3 days.</li>
+        <li>It corrects the forecast with the <b>error memory</b>. If the model was 30% too low yesterday, it is often too low tomorrow too. So we keep about half of yesterday's error for tomorrow, and less for the days after.</li>
+        <li>It finds the <b>chance that the PSI goes above 100</b>. It runs the forecast 400 times with errors of the same size as in past forecasts, and counts the runs above 100.</li>
+      </ol>
+      <p>The model has only <b>12 constants</b>. Each constant has a physical meaning. The computer found their values from about 11 years of hourly NEA data (April 2014 to 2025): it kept the set of values that makes the model closest to the measurements. This is a <b>least-squares fit</b>. Few constants with a meaning stop the model from just copying the past data (<b>overfitting</b>).</p>
+      <div class="tablewrap"><table class="simple" id="consts"></table></div>
+    </section>
+
+    <section class="card" id="test">
+      <h2>A fair test: how good is it?</h2>
+      <p>The most important idea in science: <b>test your model on data that it did not see</b>. If you test on the data that you used to find the constants, the result looks too good. So we hide one year, find the constants with the other years, and then forecast the hidden year, day by day. The forecast only uses data that was known at that time.</p>
+      <div class="kv">
+        <div><b>23 of 31</b><span>unhealthy days were caught in 2015, a hidden haze year, with only 2 false warnings in the whole year</span></div>
+        <div><b>21 of 31</b><span>for the simple guess "tomorrow is the same as today", with 10 false warnings</span></div>
+        <div id="hc-kv"><b>–</b><span>2026 test: see below</span></div>
+      </div>
+      <div id="hc-text"></div>
+      <h3 style="margin-top:12px">Honest science: what the model cannot do well</h3>
+      <ul>
+        <li><b>One box only.</b> It gives one value for all of Singapore. It cannot show that the west is worse than the east.</li>
+        <li id="onset"><b>Sudden haze.</b> When the haze arrives after a clear day, the model often sees it late.</li>
+        <li><b>Future fires.</b> Nobody knows the fires of next week. Our 7-day outlook guesses that the fires stay the same as in the last 3 days, so days far ahead are less sure.</li>
+        <li><b>One smoke height.</b> Real smoke travels at many heights. The model uses one.</li>
+      </ul>
+    </section>
+
+    <section class="card quiz" id="quiz">
+      <h2>Quiz</h2>
+      <p>Choose an answer. You get the explanation at once. <b id="qscore"></b></p>
+      <div id="qs"></div>
+    </section>
+
+    <section class="card" id="glossary">
+      <h2>Glossary</h2>
+      <div class="tablewrap"><table class="simple">
+        <tr><td><b>Back trajectory</b></td><td>The path that the air took before it arrived, found from the wind, step by step back in time.</td></tr>
+        <tr><td><b>Box model</b></td><td>A model that treats a volume of air as one well-mixed box, and keeps account of what comes in and what goes out.</td></tr>
+        <tr><td><b>Concentration</b></td><td>Mass of particles in one cubic metre of air (µg/m³).</td></tr>
+        <tr><td><b>Convection</b></td><td>Movement of a fluid because of heat: warm air goes up, cool air goes down.</td></tr>
+        <tr><td><b>Equilibrium</b></td><td>The state where what comes in is equal to what goes out, so the value does not change.</td></tr>
+        <tr><td><b>Fire radiative power</b></td><td>The infrared power from a fire that a satellite measures, in megawatts.</td></tr>
+        <tr><td><b>Mixing height</b></td><td>The height of the lid: the top of the layer of air that mixes with the ground.</td></tr>
+        <tr><td><b>Overfitting</b></td><td>When a model copies the past data too closely and then fails on new data.</td></tr>
+        <tr><td><b>Peat</b></td><td>Wet, dead plant material in thick layers. Dry peat burns slowly and makes a lot of smoke.</td></tr>
+        <tr><td><b>PM2.5</b></td><td>Particles in the air smaller than 2.5 micrometres.</td></tr>
+        <tr><td><b>PSI</b></td><td>Pollutant Standards Index. NEA's number for air quality. Above 100 is unhealthy.</td></tr>
+        <tr><td><b>Residence time</b></td><td>The time that the wind needs to change all the air in the box: L ÷ U.</td></tr>
+        <tr><td><b>Temperature inversion</b></td><td>A layer where the air gets warmer as you go up. It stops the air below from going up, like a lid.</td></tr>
+      </table></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><b>Not an official forecast.</b> For official readings and health advice, see <a href="https://www.haze.gov.sg/">haze.gov.sg</a> (NEA). Teachers: you can use this page in class. Numbers come from the model and NEA data.</p>
+    <p><a href="about.html">About the data and the model</a> · <a href="https://github.com/kychanbp/sg-haze-watch">Code on GitHub</a></p>
+  </footer>
+</div>
+<nav class="tabbar" aria-label="Main">
+  <a href="./"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.6a3.6 3.6 0 0 0 .3-7.2 5.2 5.2 0 0 0-10-1.2 4.2 4.2 0 0 0 .1 8.4z"/><path d="M8.5 21.5h7"/></svg><span>Forecast</span></a>
+  <a href="map.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Map</span></a>
+  <a href="learn.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-1.8-1.6-4.6-2.3-8-2v13c3.4-.3 6.2.4 8 2 1.8-1.6 4.6-2.3 8-2V5c-3.4-.3-6.2.4-8 2z"/><path d="M12 7v13"/></svg><span>Learn</span></a>
+  <a href="about.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.1"/></svg><span>About</span></a>
+</nav>
+<script src="assets/common.js"></script>
+<script src="assets/box.js"></script>
+<script src="assets/learn.js"></script>
+</body>
+</html>
