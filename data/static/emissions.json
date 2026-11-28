@@ -1,0 +1,62 @@
+{
+ "source": "EDGAR v8.1 (European Commission JRC), year 2022, primary PM2.5",
+ "unit": "tonnes per km2 per year",
+ "bounds": [
+  [
+   -8.0,
+   95.0
+  ],
+  [
+   8.0,
+   120.0
+  ]
+ ],
+ "layers": {
+  "ships": {
+   "file": "static/emis_ships.png",
+   "total_t_per_year_region": 141953,
+   "singapore_t_per_year": 13680,
+   "cmap": "Blues"
+  },
+  "traffic": {
+   "file": "static/emis_traffic.png",
+   "total_t_per_year_region": 37970,
+   "singapore_t_per_year": 2214,
+   "cmap": "Reds"
+  },
+  "homes_farms": {
+   "file": "static/emis_homes_farms.png",
+   "total_t_per_year_region": 458447,
+   "singapore_t_per_year": 763,
+   "cmap": "Greens"
+  },
+  "power_industry": {
+   "file": "static/emis_power_industry.png",
+   "total_t_per_year_region": 445938,
+   "singapore_t_per_year": 13483,
+   "cmap": "Purples"
+  },
+  "all": {
+   "file": "static/emis_all.png",
+   "total_t_per_year_region": 1084308,
+   "singapore_t_per_year": 30140,
+   "cmap": "magma_r"
+  }
+ },
+ "vmin": 0.05,
+ "vmax": 50.0,
+ "peat": {
+  "file": "static/peat.png",
+  "bounds": [
+   [
+    -8.125,
+    94.875
+   ],
+   [
+    8.125,
+    120.125
+   ]
+  ],
+  "source": "ERA5 soil type (tropical organic soil = peat), 0.25 deg"
+ }
+}
